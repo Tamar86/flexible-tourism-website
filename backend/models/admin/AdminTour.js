@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const adminTourSchema = new mongoose.Schema({
 	name: {
 		type: String,
-		require: true,
+		required: true,
 	},
 	description: {
 		type: String,
@@ -11,11 +11,11 @@ const adminTourSchema = new mongoose.Schema({
 	},
 	minPrice: {
 		type: Number,
-		require: true,
+		required: true,
 	},
 	minGroupSize: {
 		type: Number,
-		require: true,
+		required: true,
 	},
 	location: {
 		type: String,
@@ -25,12 +25,12 @@ const adminTourSchema = new mongoose.Schema({
 		days: { type: Number, required: true }, // Number of days
 		nights: { type: Number, required: true }, // Number of nights
 	},
-	images: [
-		{
-			imgUrl: { type: String },
-			publicId: { type: String },
-		},
-	],
+	// images: [
+	// {
+	// imgUrl: { type: String },
+	// publicId: { type: String },
+	// },
+	// ],
 });
 
 const AdminTour = mongoose.model('AdminTour', adminTourSchema, 'admin_tours');

@@ -2,8 +2,12 @@
 
 import { ReactNode, useContext, useReducer, createContext } from 'react';
 
-import { EmployeesAction, EmployeesState } from '../types/employees';
 import { getFieldValue } from '../helpers/formatSortbyEmployees';
+import {
+	EmployeesAction,
+	EmployeesContextType,
+	EmployeesState,
+} from '../types/employees';
 
 const initialEmployeesState: EmployeesState = {
 	allEmployees: [],
@@ -73,6 +77,7 @@ const employeesReducer = (
 			return { ...state, zip: action.payload };
 		case 'SET_NOTES':
 			return { ...state, notes: action.payload };
+
 		case 'SEARCH_BY_NAME': {
 			const searchTerm = action.payload.toLowerCase();
 			const filteredEmployees = state.employees.filter(employee =>
@@ -80,12 +85,8 @@ const employeesReducer = (
 			);
 			return { ...state, allEmployees: filteredEmployees };
 		}
-
-		case 'RESET_EMPLOYEE_STATE':
-			return { ...initialEmployeesState }; // Reset state
 		case 'SORT_EMPLOYEES': {
 			const field = action.payload;
-
 			const sortedEmployees = [...state.allEmployees].sort((a, b) => {
 				const valueA = getFieldValue(a, field);
 				const valueB = getFieldValue(b, field);
@@ -95,18 +96,20 @@ const employeesReducer = (
 
 			return { ...state, allEmployees: sortedEmployees };
 		}
+		case 'RESET_EMPLOYEE_STATE':
+			return { ...initialEmployeesState }; // Reset state
+
 		default:
 			return state;
 	}
 };
 
-export const EmployeesContext = createContext<
-	| {
-			state: EmployeesState;
-			dispatch: React.Dispatch<EmployeesAction>;
-	  }
-	| undefined
->(undefined);
+export const EmployeesContext = createContext<EmployeesContextType>({
+	state: initialEmployeesState,
+	dispatch: () => {
+		throw new Error('dispatch called outside of EmployeesProvider');
+	},
+});
 
 export const EmployeesProvider = ({ children }: { children: ReactNode }) => {
 	const [state, dispatch] = useReducer(employeesReducer, initialEmployeesState);

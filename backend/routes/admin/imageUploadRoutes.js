@@ -3,7 +3,7 @@ const upload = require('../../middlewares/multer');
 const AdminTour = require('../../models/admin/AdminTour');
 const router = express.Router();
 
-router.post('/upload/:tourId', upload.single('image'), async (req, res) => {
+router.post('/upload/', upload.single('image'), async (req, res) => {
 	try {
 		const { tourId } = req.params;
 		if (!req.file) {

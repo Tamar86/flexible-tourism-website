@@ -1,6 +1,20 @@
 const mongoose = require('mongoose');
 
 const adminBookingSchema = new mongoose.Schema({
+	bookingType: {
+		type: String,
+		enum: ['B2B', 'B2C'],
+		required: true,
+	},
+
+	customer: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Customer', // Reference to a customer model
+		required: function () {
+			return this.bookingType === 'B2C';
+		},
+	},
+
 	partner: {
 		type: mongoose.Schema.Types.Mixed,
 		ref: 'AdminPartner',
@@ -36,7 +50,7 @@ const adminBookingSchema = new mongoose.Schema({
 		required: true,
 		default: 0,
 	},
-	payed: {
+	isPayed: {
 		type: Boolean,
 		required: true,
 	},
@@ -54,7 +68,10 @@ const adminBookingSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
-	tourDate: { type: Date, required: true },
+	tourStartDate: { type: Date, required: true },
+
+	tourEndDate: { type: Date, required: true },
+
 	status: {
 		type: String,
 		enum: ['pending', 'confirmed', 'canceled'],

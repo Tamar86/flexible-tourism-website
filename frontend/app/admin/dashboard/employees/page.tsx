@@ -1,5 +1,5 @@
-import Employees from '../../_components/main/employees/Employees';
+import DisplayAllEmployees from '../../_components/main/employees/DisplayAllEmployees';
 
 export default function Page() {
-	return <Employees />;
+	return <DisplayAllEmployees />;
 }

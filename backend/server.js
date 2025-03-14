@@ -14,21 +14,18 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-const adminEmployeeRoutes = require('./routes/admin/adminEmployeeRoutes');
-const adminBookingRoutes = require('./routes/admin/adminBookingRoutes');
-const adminPartnerRoutes = require('./routes/admin/adminPartnerRoutes');
-const adminTourRoutes = require('./routes/admin/adminTourRoutes');
-const uploadImageRoutes = require('./routes/admin/imageUploadRoutes');
-const deleteImageRoutes = require('./routes/admin/imageDeleteRoutes');
 const authRoutes = require('./routes/admin/adminAuthRoutes');
+const adminEmployeeRoutes = require('./routes/admin/adminEmployeeRoutes');
+const adminPartnerRoutes = require('./routes/admin/adminPartnerRoutes');
+const adminBookingRoutes = require('./routes/admin/adminBookingRoutes');
+const adminTourRoutes = require('./routes/admin/adminTourRoutes');
 
-app.use('/api/admin/employees', adminEmployeeRoutes);
-app.use('/api/admin/bookings', adminBookingRoutes);
-app.use('/api/admin/partners', adminPartnerRoutes);
-app.use('/api/admin/tours', adminTourRoutes);
-app.use('/api/admin', uploadImageRoutes);
-app.use('/api/admin', deleteImageRoutes);
 app.use('/api/admin', authRoutes);
+app.use('/uploads', express.static('uploads'));
+app.use('/api/admin/employees', adminEmployeeRoutes);
+app.use('/api/admin/partners', adminPartnerRoutes);
+app.use('/api/admin/bookings', adminBookingRoutes);
+app.use('/api/admin/tours', adminTourRoutes);
 
 // Connect to MongoDB
 mongoose

@@ -1,10 +1,11 @@
 import axios from 'axios';
+
 import {
 	Employee,
-	EmployeesAction,
-	Employees,
-	EmployeesState,
 	EmployeeFormData,
+	Employees,
+	EmployeesAction,
+	EmployeesState,
 	SetBooleanState,
 } from '../types/employees';
 

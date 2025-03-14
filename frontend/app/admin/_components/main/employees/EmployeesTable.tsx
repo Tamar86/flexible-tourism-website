@@ -1,13 +1,32 @@
 import { Table } from 'react-bootstrap';
-import DropdownMenu from './DropdownMenu';
+// import DropdownMenu from './DropdownMenu';
 
-import { employeeTableData } from '@/app/admin/constants/formFields';
 import { useEmployees } from '@/app/admin/context/EmployeesContext';
 import LoadingSpinner from '@/app/admin/ui/LoadingSpinner';
+import DropdownMenu from '@/app/admin/ui/DropDownMenu';
+import { deleteEmployee } from '@/app/admin/services/employeesService';
+
+export const employeeTableData = [
+	{ title: '#', id: 1 },
+	{ title: 'First Name', id: 2 },
+	{ title: 'Last Name', id: 3 },
+	{ title: 'Employment Type', id: 6 },
+	{ title: 'Position', id: 7 },
+	{ title: 'Telephone', id: 8 },
+	{ title: 'Email', id: 9 },
+	{ title: 'More', id: 10 },
+];
 
 export default function EmployeesTable() {
-	const { state } = useEmployees();
+	const { state, dispatch } = useEmployees();
 	const { allEmployees } = state;
+
+	if (allEmployees.length === 0) return <LoadingSpinner />;
+
+	const handleDelete = async function (id: string) {
+		await deleteEmployee(id);
+		dispatch({ type: 'DELETE_EMPLOYEE', payload: id });
+	};
 
 	return (
 		<Table striped bordered hover>
@@ -17,10 +36,8 @@ export default function EmployeesTable() {
 						<th key={data.id}>{data.title}</th>
 					))}
 				</tr>
-				<tr></tr>
 			</thead>
 			<tbody>
-				{allEmployees.length === 0 && <LoadingSpinner />}
 				{allEmployees.map((employee, i) => (
 					<tr key={employee._id}>
 						<td>{i + 1}</td>
@@ -41,7 +58,11 @@ export default function EmployeesTable() {
 						</td>
 
 						<td className='flex items-center justify-center '>
-							<DropdownMenu id={employee._id} employee={employee} />
+							<DropdownMenu
+								id={employee._id}
+								pathTitle='employees'
+								handleDelete={handleDelete}
+							/>
 						</td>
 					</tr>
 				))}

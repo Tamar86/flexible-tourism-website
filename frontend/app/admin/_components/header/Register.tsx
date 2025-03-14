@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/app/admin/context/authContext';
+import { useAuth } from '@/app/admin/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 import FloatingLabel from 'react-bootstrap/FloatingLabel';

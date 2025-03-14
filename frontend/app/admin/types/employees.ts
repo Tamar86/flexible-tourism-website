@@ -1,4 +1,48 @@
-// EMPLOYEE CONTEXT
+interface Contact {
+	address: string;
+	telephone: string;
+	email: string;
+	city: string;
+	country: string;
+	zip: string;
+}
+
+interface Fullname {
+	firstName: string;
+	lastName: string;
+}
+
+export interface Employees {
+	_id: string;
+	fullname: {
+		firstName: string;
+		lastName: string;
+	};
+	idNumber: string;
+	bankAccount: string;
+	employmentType: string;
+	position: string;
+	contact: {
+		address: string;
+		telephone: string;
+		email: string;
+		city: string;
+		country: string;
+		zip: string;
+	};
+	notes: string;
+}
+
+export interface Employee {
+	fullname: Fullname;
+	idNumber: string;
+	bankAccount: string;
+	employmentType: string;
+	position: string;
+	contact: Contact;
+	notes: string;
+	_id: string;
+}
 
 export interface EmployeesState {
 	allEmployees: Employees[];
@@ -41,6 +85,11 @@ export type EmployeesAction =
 	| { type: 'SORT_EMPLOYEES'; payload: string }
 	| { type: 'SEARCH_BY_NAME'; payload: string }
 	| { type: 'RESET_EMPLOYEE_STATE' };
+
+export interface EmployeesContextType {
+	state: EmployeesState;
+	dispatch: React.Dispatch<EmployeesAction>;
+}
 
 // EMPLOYEE PROPS
 
@@ -91,52 +140,4 @@ export interface EditEmployeeFormType {
 	setReadOnly: SetBooleanState;
 	handleSubmitForm: (e: React.FormEvent) => void;
 	handleShow: () => void;
-}
-
-// EMPLOYEE VARIABLES
-
-interface Contact {
-	address: string;
-	telephone: string;
-	email: string;
-	city: string;
-	country: string;
-	zip: string;
-}
-
-interface Fullname {
-	firstName: string;
-	lastName: string;
-}
-
-export interface Employees {
-	_id: string;
-	fullname: {
-		firstName: string;
-		lastName: string;
-	};
-	idNumber: string;
-	bankAccount: string;
-	employmentType: string;
-	position: string;
-	contact: {
-		address: string;
-		telephone: string;
-		email: string;
-		city: string;
-		country: string;
-		zip: string;
-	};
-	notes: string;
-}
-
-export interface Employee {
-	fullname: Fullname;
-	idNumber: string;
-	bankAccount: string;
-	employmentType: string;
-	position: string;
-	contact: Contact;
-	notes: string;
-	_id: string;
 }

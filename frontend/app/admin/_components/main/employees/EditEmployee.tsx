@@ -1,5 +1,25 @@
 'use client';
 
+const editEmployeeFormData = {
+	fullname: {
+		firstName: '',
+		lastName: '',
+	},
+	contact: {
+		address: '',
+		telephone: '',
+		email: '',
+		city: '',
+		country: '',
+		zip: '',
+	},
+	idNumber: '',
+	bankAccount: '',
+	employmentType: '',
+	position: '',
+	notes: '',
+};
+
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEmployees } from '@/app/admin/context/EmployeesContext';
@@ -12,7 +32,6 @@ import {
 	handleEditEmployeeForm,
 	handleFormdata,
 } from '@/app/admin/helpers/handleEmployeeChange';
-import { editFormData } from '@/app/admin/constants/formFields';
 
 // COMPONENTS
 import DeleteEmployeeConfirm from './DeleteEmployeeConfirm';
@@ -21,12 +40,12 @@ import LoadingSpinner from '@/app/admin/ui/LoadingSpinner';
 
 export default function EditEmployee() {
 	const router = useRouter();
-	const { id } = useParams();
+	const { id } = useParams<{ id: string }>();
 
 	const { dispatch, state } = useEmployees();
 	const { employee } = state;
 	const [readOnly, setReadOnly] = useState(true);
-	const [formData, setFormData] = useState(editFormData);
+	const [formData, setFormData] = useState(editEmployeeFormData);
 
 	//////////////////////////
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -38,16 +57,14 @@ export default function EditEmployee() {
 	}, [employee]);
 
 	useEffect(() => {
-		if (typeof id === 'string') {
-			displayEmployee(dispatch, id);
-		}
+		displayEmployee(dispatch, id);
 	}, [id, dispatch]);
 
 	const handleSubmitForm = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (typeof id === 'string') {
-			await updateEmployee(formData, id);
-		}
+
+		await updateEmployee(formData, id);
+
 		setReadOnly(true);
 	};
 
@@ -62,10 +79,8 @@ export default function EditEmployee() {
 	};
 
 	const handleDelete = async function () {
-		if (typeof id === 'string') {
-			await deleteEmployee(id);
-			router.push('/admin/dashboard/employees');
-		}
+		await deleteEmployee(id);
+		router.push('/admin/dashboard/employees');
 	};
 
 	if (!employee) return <LoadingSpinner />;

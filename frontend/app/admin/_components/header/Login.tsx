@@ -3,7 +3,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/app/admin/context/authContext';
+import { useAuth } from '@/app/admin/context/AuthContext';
 
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';

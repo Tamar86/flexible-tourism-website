@@ -7,8 +7,8 @@ import {
 	NavDropdown,
 	Offcanvas,
 } from 'react-bootstrap';
-import { useAuth } from '../../context/authContext';
-import { useLogout } from '../../context/logout';
+import { useAuth } from '../../context/AuthContext';
+import { useLogout } from './logout';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';

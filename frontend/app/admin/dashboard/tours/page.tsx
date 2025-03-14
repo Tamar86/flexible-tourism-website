@@ -1,3 +1,5 @@
+import DisplayAllTours from '../../_components/main/tours/DisplayAllTours';
+
 export default function Page() {
-	return <div>Tours</div>;
+	return <DisplayAllTours />;
 }
