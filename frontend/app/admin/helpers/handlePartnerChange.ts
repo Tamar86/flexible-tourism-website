@@ -28,9 +28,7 @@ export const handlePartnerFormdata = (
 				partnershipStartDate: partner.partnershipStartDate,
 				partnershipEndDate: partner.partnershipEndDate,
 				rating: partner.rating,
-				contractDocuments: partner?.contractDocuments,
-				contractDocumentsUrls: partner.contractDocumentsUrls,
-				// deletedDocuments: partner.deletedDocuments,
+				documents: partner?.documents,
 
 				legalRepresentative: partner.legalRepresentative,
 				notes: partner.notes,

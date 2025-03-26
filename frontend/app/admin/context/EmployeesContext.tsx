@@ -12,6 +12,7 @@ import {
 const initialEmployeesState: EmployeesState = {
 	allEmployees: [],
 	employees: [],
+	idNumbers: [],
 	employee: null,
 	firstName: '',
 	lastName: '',
@@ -26,7 +27,6 @@ const initialEmployeesState: EmployeesState = {
 	country: '',
 	zip: '',
 	notes: '',
-	id: '',
 };
 
 const employeesReducer = (
@@ -51,6 +51,8 @@ const employeesReducer = (
 					emp => emp._id !== action.payload,
 				),
 			};
+		case 'SET_ID_NUMBERS':
+			return { ...state, idNumbers: action.payload };
 		case 'SET_FIRST_NAME':
 			return { ...state, firstName: action.payload };
 		case 'SET_LAST_NAME':

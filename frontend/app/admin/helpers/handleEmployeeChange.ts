@@ -7,6 +7,7 @@ export const handleEditEmployeeForm = function (
 	setFormData: React.Dispatch<React.SetStateAction<EmployeeFormData>>,
 ) {
 	const { name, value } = e.target;
+
 	if (name.startsWith('fullname.')) {
 		// Update nested fullname field
 		const field = name.split('.')[1]; // e.g., fullname.firstName -> firstName

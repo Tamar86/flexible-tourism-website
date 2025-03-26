@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const AdminPartner = require('../../models/admin/AdminPartner');
 
-const { uploadContract } = require('../../utils/fileUpload');
+const { uploadPartnerDocument } = require('../../utils/fileUpload');
 
 exports.getAllPartners = async (req, res) => {
 	try {
@@ -39,7 +39,7 @@ exports.createPartner = async (req, res) => {
 		// If files are uploaded, process each file
 		if (req.files && req.files.length > 0) {
 			for (let file of req.files) {
-				let fileUrl = await uploadContract(file);
+				let fileUrl = await uploadPartnerDocument(file);
 				contractDocumentsUrl.push(fileUrl);
 			}
 		}
@@ -72,7 +72,7 @@ exports.createPartner = async (req, res) => {
 			},
 
 			notes: req.body.notes,
-			contractDocuments: contractDocumentsUrl, // Store file paths in DB
+			documents: contractDocumentsUrl, // Store file paths in DB
 		};
 
 		const newPartner = new AdminPartner(partnerData);
@@ -138,10 +138,10 @@ exports.updatePartner = async (req, res) => {
 			const newFilePaths = req.files.map(
 				file => `/uploads/partner/${file.filename}`,
 			);
-			const existingDocuments = existingPartner.contractDocuments || [];
+			const existingDocuments = existingPartner.documents || [];
 
 			// Merge old and new documents
-			updateFields.contractDocuments = [...existingDocuments, ...newFilePaths];
+			updateFields.documents = [...existingDocuments, ...newFilePaths];
 		}
 
 		// Update in database
@@ -200,7 +200,7 @@ exports.deleteDocument = async (req, res) => {
 		// Also update MongoDB if needed
 		await AdminPartner.updateOne(
 			{},
-			{ $pull: { contractDocuments: `/uploads/partner/${fileName}` } },
+			{ $pull: { documents: `/uploads/partner/${fileName}` } },
 		);
 
 		res.status(200).json({ message: 'Document deleted successfully' });

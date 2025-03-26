@@ -44,7 +44,7 @@ export const updateTour = async function (
 ) {
 	try {
 		const response = await axios.patch(
-			`http://localhost:5000/api/admin/partners/update/${id}`,
+			`http://localhost:5000/api/admin/tours/update/${id}`,
 			formData,
 			{
 				headers: {
@@ -52,6 +52,7 @@ export const updateTour = async function (
 				},
 			},
 		);
+		console.log('updateResponse', response);
 	} catch (err) {
 		console.log(err);
 	}
@@ -70,35 +71,36 @@ export const deleteTour = async function (id: string) {
 //CREATE NEW TOUR
 
 export const addNewTour = async (
-	state: Tour,
-	setShow: SetBooleanState,
+	formData: FormData,
 	dispatch: React.Dispatch<ToursAction>,
+	handleClose: () => void,
 ) => {
 	try {
-		const {
-			name,
-			description,
-			minPrice,
-			minGroupSize,
-			location,
-			duration: { days, nights },
-		} = state;
-		const newEmployee = {
-			name,
-			description,
-			minPrice,
-			minGroupSize,
-			location,
-			duration: { days, nights },
-		};
+		const response = await axios.post(
+			'http://localhost:5000/api/admin/tours/new',
+			formData,
+			{
+				headers: { 'Content-Type': 'multipart/form-data' },
+			},
+		);
 
-		await axios.post('http://localhost:5000/api/admin/tours/new', newEmployee, {
-			headers: { 'Content-Type': 'application/json' },
-		});
+		console.log('resTour', response);
 
-		setShow(false);
-		// dispatch({ type: 'RESET_TOUR_STATE' });
+		if (response.status === 201) {
+			handleClose();
+			try {
+				const response = await axios.get(
+					'http://localhost:5000/api/admin/tours/all',
+				);
+				console.log('tourResponse', response);
+				dispatch({ type: 'SET_ALL_TOURS', payload: response.data.tours });
+				dispatch({ type: 'SET_TOURS', payload: response.data.tours });
+			} catch (err) {
+				console.log(err);
+			}
+		}
 	} catch (err) {
 		console.error('Error adding employee:', err);
+		alert(`Error Creating new tour, ${err}`);
 	}
 };

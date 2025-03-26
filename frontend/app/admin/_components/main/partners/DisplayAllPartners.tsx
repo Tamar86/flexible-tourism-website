@@ -1,12 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
+
 import { usePartners } from '@/app/admin/context/PartnersContext';
-import { formatFieldNamePartner } from '@/app/admin/helpers/formatSortByPartners';
+
 import { displayAllPartners } from '@/app/admin/services/partnersService';
 import AddNewPartnerForm from './AddNewPartnerForm';
 import PartnersTable from './PartnersTable';
+import FormSearch from '@/app/admin/ui/FormSearch';
+import DropDownSort from '@/app/admin/ui/DropDownSort';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import Button from '@/app/admin/ui/Button';
 
 export default function DisplayAllPartners() {
 	const { dispatch } = usePartners();
@@ -22,8 +26,8 @@ export default function DisplayAllPartners() {
 
 	const handleSort = (field: string | null) => {
 		if (!field) return;
-		console.log('Sorting by:', field);
-		setTitle(`Sorted By: ${formatFieldNamePartner(field)} (A-Z)`);
+
+		setTitle(`Sorted`);
 
 		dispatch({ type: 'SORT_PARTNERS', payload: field });
 	};
@@ -31,6 +35,7 @@ export default function DisplayAllPartners() {
 	const handleUnsortPartners = () => {
 		displayAllPartners(dispatch);
 	};
+
 	const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
 		const { value } = e.target;
@@ -40,29 +45,33 @@ export default function DisplayAllPartners() {
 	return (
 		<div>
 			<div className='mb-3 flex items-center justify-between'>
-				<DropdownButton onSelect={handleSort} title={title} variant='link'>
-					<Dropdown.Item onClick={handleUnsortPartners}>Unsort</Dropdown.Item>
-					<Dropdown.Item eventKey='companyName'>
-						Company Name (A-Z)
-					</Dropdown.Item>
-					<Dropdown.Item eventKey='country'>Country (A-Z)</Dropdown.Item>
-					<Dropdown.Item eventKey='companyRepresentative'>
-						Representative (A-Z)
-					</Dropdown.Item>
-				</DropdownButton>
+				<DropDownSort
+					onClick={handleUnsortPartners}
+					icons={{
+						iconDown: <ChevronDown className='w-4' />,
+						iconUp: <ChevronUp className='w-4' />,
+					}}
+					label={title}
+					options={[
+						{ label: 'Company Name', value: 'companyName' },
+						{ label: 'Country', value: 'country' },
+						{ label: 'Representative', value: 'companyRepresentative' },
+					]}
+					onSelect={handleSort}
+				/>
 
-				<Form className='d-flex'>
-					<Form.Control
-						type='search'
-						placeholder='Search by name'
-						className='me-2'
-						aria-label='Search'
-						onChange={handleChangeSearch}
-					/>
-				</Form>
-				<Button variant='outline-primary' onClick={handleShow}>
-					Add New Employee
-				</Button>
+				<FormSearch
+					type='search'
+					placeholder='Search by partner name'
+					onChange={handleChangeSearch}
+				/>
+
+				<Button
+					label='Add New Partner'
+					className=''
+					type='button'
+					onClick={handleShow}
+				/>
 			</div>
 
 			<PartnersTable />

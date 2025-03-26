@@ -1,3 +1,5 @@
+import DisplayAllBookings from '../../_components/main/bookings/DisplayAllBookings';
+
 export default function Page() {
-	return <div>Bookings</div>;
+	return <DisplayAllBookings />;
 }

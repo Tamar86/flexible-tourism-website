@@ -82,17 +82,19 @@ export const addNewEmployee = async (
 			},
 			notes,
 		};
+		console.log('new empl', newEmployee);
 
-		await axios.post(
+		const response = await axios.post(
 			'http://localhost:5000/api/admin/employees/new',
 			newEmployee,
 			{ headers: { 'Content-Type': 'application/json' } },
 		);
-
+		console.log('ressssss', response);
 		setShow(false);
 		dispatch({ type: 'RESET_EMPLOYEE_STATE' });
 	} catch (err) {
 		console.error('Error adding employee:', err);
+		// alert(`${err} Error Adding new employee`);
 	}
 };
 

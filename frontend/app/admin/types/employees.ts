@@ -41,12 +41,12 @@ export interface Employee {
 	position: string;
 	contact: Contact;
 	notes: string;
-	_id: string;
 }
 
 export interface EmployeesState {
 	allEmployees: Employees[];
 	employees: Employees[];
+	idNumbers: string[];
 	employee: Employee | null;
 	firstName: string;
 	lastName: string;
@@ -61,7 +61,6 @@ export interface EmployeesState {
 	country: string;
 	zip: string;
 	notes: string;
-	id: string;
 }
 
 export type EmployeesAction =
@@ -69,6 +68,7 @@ export type EmployeesAction =
 	| { type: 'DELETE_EMPLOYEE'; payload: string }
 	| { type: 'SET_ALL_EMPLOYEES'; payload: Employees[] }
 	| { type: 'SET_EMPLOYEE'; payload: Employee }
+	| { type: 'SET_ID_NUMBERS'; payload: string[] }
 	| { type: 'SET_FIRST_NAME'; payload: string }
 	| { type: 'SET_LAST_NAME'; payload: string }
 	| { type: 'SET_ID_NUMBER'; payload: string }
@@ -126,18 +126,17 @@ export interface EmployeeFormProps {
 	show: boolean;
 	setShow: React.Dispatch<React.SetStateAction<boolean>>;
 	handleClose: () => void;
-	addNewEmployee: () => void;
 }
 
 export interface EditEmployeeFormType {
+	validated: boolean;
 	formData: EmployeeFormData;
 	handleChange: (
 		e: React.ChangeEvent<
 			HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
 		>,
 	) => void;
-	readOnly: boolean;
-	setReadOnly: SetBooleanState;
-	handleSubmitForm: (e: React.FormEvent) => void;
+
+	handleSubmitForm: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 	handleShow: () => void;
 }

@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 
-import Dropdown from 'react-bootstrap/Dropdown';
-import { CiMenuKebab } from 'react-icons/ci';
-
-import { Button, Modal } from 'react-bootstrap';
+import { Ellipsis } from 'lucide-react';
+import Modal from './Modal';
+import Button from './Button';
+import DropDownOptions from './DropDownOptions';
 
 interface DropdownMenuProps {
 	id: string;
@@ -29,41 +29,29 @@ export default function DropdownMenu({
 
 	return (
 		<>
-			<Modal show={showConfirmDelete} onHide={handleClose}>
-				<Modal.Header closeButton>
-					<Modal.Title>Modal heading</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>Are you sure you want to delete employee?</Modal.Body>
-				<Modal.Footer>
-					<Button variant='outline-secondary' onClick={handleClose}>
-						Cancel
-					</Button>
-					<Button variant='outline-danger' onClick={itemDelete}>
-						Delete
-					</Button>
-				</Modal.Footer>
+			<Modal isOpen={showConfirmDelete} onClose={handleClose} title='title'>
+				<Button
+					onClick={handleClose}
+					label='Cancel'
+					className=''
+					type='button'
+				/>
+				<Button
+					onClick={itemDelete}
+					label='Delete'
+					className=''
+					type='button'
+				/>
 			</Modal>
 
-			<Dropdown>
-				<Dropdown.Toggle
-					as='button'
-					bsPrefix='custom-dropdown-toggle'
-					id={id} //maybe i would have to use tour._id ??
-				>
-					<CiMenuKebab className='size-5' />
-				</Dropdown.Toggle>
-				<Dropdown.Menu>
-					<Dropdown.Item href={`/admin/dashboard/${pathTitle}/${id}`}>
-						Details/Edit
-					</Dropdown.Item>
-					<Dropdown.Item as='button' onClick={handleShow}>
-						Delete
-					</Dropdown.Item>
-					<Dropdown.Item href={`/admin/dashboard/${pathTitle}/archive`}>
-						Archive
-					</Dropdown.Item>
-				</Dropdown.Menu>
-			</Dropdown>
+			<DropDownOptions
+				icon={<Ellipsis className='w-4' />}
+				options={[
+					{ label: 'View', value: `/admin/dashboard/${pathTitle}/${id}/view` },
+					{ label: 'Edit', value: `/admin/dashboard/${pathTitle}/${id}/edit` },
+					{ label: 'Delete', onClick: handleShow }, // Function action
+				]}
+			/>
 		</>
 	);
 }

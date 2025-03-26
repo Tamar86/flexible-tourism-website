@@ -39,11 +39,7 @@ export const displayPartner = async (
 
 //UPDATE
 
-export const updatePartner = async function (
-	formData: FormData,
-	id: string,
-	dispatch: React.Dispatch<PartnersAction>,
-) {
+export const updatePartner = async function (formData: FormData, id: string) {
 	try {
 		const response = await axios.patch(
 			`http://localhost:5000/api/admin/partners/update/${id}`,
@@ -55,14 +51,7 @@ export const updatePartner = async function (
 			},
 		);
 		if (response.status === 200) {
-			const resContractDocs = response.data.partner.contractDocuments;
-
-			dispatch({
-				type: 'SET_CONTRACT_DOCUMENT_URLS',
-				payload: resContractDocs,
-			});
 		}
-		console.log('docres', response);
 	} catch (err) {
 		console.log(err);
 	}

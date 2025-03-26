@@ -1,11 +1,10 @@
 import { usePartners } from '@/app/admin/context/PartnersContext';
 import LoadingSpinner from '@/app/admin/ui/LoadingSpinner';
-import { Table } from 'react-bootstrap';
 
 import DropdownMenu from '@/app/admin/ui/DropDownMenu';
 import { deletePartner } from '@/app/admin/services/partnersService';
 
-export const PartnersTableData = [
+const PartnersTableData = [
 	{ title: '#', id: 1 },
 	{ title: 'Company Name', id: 2 },
 	{ title: 'Company Representative', id: 4 },
@@ -26,7 +25,7 @@ export default function PartnersTable() {
 
 	if (allPartners.length === 0) return <LoadingSpinner />;
 	return (
-		<Table striped bordered hover>
+		<table>
 			<thead>
 				<tr>
 					{PartnersTableData.map(partner => (
@@ -53,6 +52,6 @@ export default function PartnersTable() {
 					</tr>
 				))}
 			</tbody>
-		</Table>
+		</table>
 	);
 }

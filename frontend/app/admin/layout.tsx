@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Header from './_components/header/Header';
 import { AuthProvider } from '@/app/admin/context/AuthContext';
@@ -7,6 +6,8 @@ import { EmployeesProvider } from './context/EmployeesContext';
 import { PartnersProvider } from './context/PartnersContext';
 import { BookingsProvider } from './context/BookingsContext';
 import { ToursProvider } from './context/ToursContext';
+import { GeneralProvider } from './context/GeneralContext';
+import { CustomersProvider } from './context/CustomersContext';
 
 export const metadata: Metadata = {
 	title: 'Create Next App',
@@ -19,23 +20,25 @@ export default function AdminLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<div>
+		<div className=''>
 			<AuthProvider>
-				<ToursProvider>
-					<BookingsProvider>
-						<PartnersProvider>
-							<EmployeesProvider>
-								<header className='fixed w-full z-10'>
-									<Header />
-								</header>
+				<GeneralProvider>
+					<ToursProvider>
+						<BookingsProvider>
+							<PartnersProvider>
+								<EmployeesProvider>
+									<CustomersProvider>
+										<Header />
 
-								<main className='flex items-center justify-center min-h-screen'>
-									{children}
-								</main>
-							</EmployeesProvider>
-						</PartnersProvider>
-					</BookingsProvider>
-				</ToursProvider>
+										<main className='flex items-center justify-center min-h-screen py-8 bg-slate-50 '>
+											{children}
+										</main>
+									</CustomersProvider>
+								</EmployeesProvider>
+							</PartnersProvider>
+						</BookingsProvider>
+					</ToursProvider>
+				</GeneralProvider>
 			</AuthProvider>
 		</div>
 	);

@@ -1,103 +1,130 @@
+import { useEmployees } from '@/app/admin/context/EmployeesContext';
+import { useGeneral } from '@/app/admin/context/GeneralContext';
+import { displayAllEmployees } from '@/app/admin/services/employeesService';
 import { EditEmployeeFormType } from '@/app/admin/types/employees';
-import { useState } from 'react';
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import Form from '@/app/admin/ui/Form';
+
+import { useEffect, useState } from 'react';
+
 import { MdContentCopy } from 'react-icons/md';
+import Button from '@/app/admin/ui/Button';
+import Input from '@/app/admin/ui/Input';
 
 export default function EditEmployeeForm({
 	formData,
 	handleChange,
-	readOnly,
-	setReadOnly,
 	handleSubmitForm,
 	handleShow,
+	validated,
 }: EditEmployeeFormType) {
 	const [copied, setCopied] = useState('');
 
-	const handleCopy = (text: string, id: string) => {
+	const handleCopy = (text: string) => {
 		navigator.clipboard.writeText(text);
-		setCopied(id);
+		setCopied(text);
 		setTimeout(() => {
 			setCopied('');
 		}, 2000);
-		console.log('text');
+	};
+
+	const { state, dispatch } = useEmployees();
+	const { allEmployees } = state;
+	const { state: generalState, dispatch: generalDispatch } = useGeneral();
+	const { readOnly } = generalState;
+
+	useEffect(() => {
+		displayAllEmployees(dispatch);
+	}, [dispatch]);
+
+	const handleIdNumberChange = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+
+		generalDispatch({ type: 'SET_READONLY', payload: false });
+
+		if (allEmployees.length > 0) {
+			const ids = allEmployees.map(empl => empl.idNumber);
+			dispatch({ type: 'SET_ID_NUMBERS', payload: ids });
+		}
 	};
 
 	return (
-		<Form>
+		// NEEDS TO BE IMPROVED its reloading after editing
+		<Form onSubmit={handleSubmitForm}>
 			<div className='grid grid-cols-2 gap-5'>
 				<div>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							First Name
-						</InputGroup.Text>
-						<Form.Control
+					<div>
+						<label htmlFor='firstName'>First Name</label>
+						<Input
+							type='text'
+							id='firstName'
 							name='fullname.firstName'
 							value={formData.fullname.firstName || ''}
 							onChange={handleChange}
 							disabled={readOnly && true}
 							required
 						/>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							Last Name
-						</InputGroup.Text>
-						<Form.Control
+					</div>
+					<div>
+						<label htmlFor='lastName'>Last Name</label>
+						<Input
+							type='text'
+							id='lastName'
 							name='fullname.lastName'
 							value={formData.fullname.lastName || ''}
 							onChange={handleChange}
 							disabled={readOnly && true}
+							required
 						/>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							ID Number
-						</InputGroup.Text>
-						<Form.Control
+					</div>
+					<div>
+						<label htmlFor='idNumber'>ID Number</label>
+						<Input
+							type='text'
+							id='idNumber'
 							value={formData.idNumber || ''}
 							onChange={handleChange}
 							name='idNumber'
 							disabled={readOnly && true}
+							required
 						/>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							Bank Account Number
-						</InputGroup.Text>
-						<Form.Control
+					</div>
+
+					<div>
+						<label htmlFor='bankAccount'>Bank Account Number</label>
+						<Input
+							type='text'
+							id='bankAccount'
 							name='bankAccount'
 							value={formData.bankAccount || ''}
 							onChange={handleChange}
 							disabled={readOnly && true}
+							required
 						/>
-						<InputGroup.Text>
-							<button
-								aria-label='Copy'
-								type='button'
-								onClick={() =>
-									handleCopy(formData.bankAccount, formData.idNumber)
+
+						<button
+							title='copy'
+							type='button'
+							onClick={() => handleCopy(formData.bankAccount)}
+						>
+							<MdContentCopy
+								size={18}
+								className={
+									copied === formData.bankAccount
+										? 'text-green-700 '
+										: 'text-gray-500 hover:text-black'
 								}
-							>
-								<MdContentCopy
-									size={18}
-									className={
-										copied === formData.idNumber
-											? 'text-green-700 '
-											: 'text-gray-500 hover:text-black'
-									}
-								/>
-							</button>
-						</InputGroup.Text>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							Employment Type
-						</InputGroup.Text>
-						<Form.Select
+							/>
+						</button>
+					</div>
+					<div>
+						<label htmlFor='employmentType'>Employment Type</label>
+						<select
+							id='employmentType'
 							name='employmentType'
 							value={formData.employmentType || ''}
 							onChange={handleChange}
 							disabled={readOnly && true}
+							required
 						>
 							<option value='Freelance'>Freelance</option>
 							<option value='Contract'>Contract</option>
@@ -106,121 +133,129 @@ export default function EditEmployeeForm({
 							<option value='Internship'>Internship</option>
 							<option value='Temporary'>Temporary</option>
 							<option value='N/A'>N/A</option>
-						</Form.Select>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							Position
-						</InputGroup.Text>
-						<Form.Control
+						</select>
+					</div>
+					<div>
+						<label htmlFor='position'>Position</label>
+						<Input
+							type='text'
+							id='position'
 							name='position'
 							value={formData.position || ''}
 							onChange={handleChange}
 							disabled={readOnly && true}
+							required
 						/>
-					</InputGroup>
+					</div>
 				</div>
 				<div>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							Email Address
-						</InputGroup.Text>
-						<Form.Control
+					<div>
+						<label htmlFor='email'>Email Address</label>
+						<Input
+							id='email'
 							name='contact.email'
 							value={formData.contact.email || ''}
 							onChange={handleChange}
 							type='email'
 							disabled={readOnly && true}
+							required
 						/>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							Telephone
-						</InputGroup.Text>
-						<Form.Control
+					</div>
+					<div>
+						<label htmlFor='telephone'>Telephone</label>
+						<Input
+							id='telephone'
 							name='contact.telephone'
 							value={formData.contact.telephone || ''}
 							onChange={handleChange}
 							type='text'
 							disabled={readOnly && true}
+							required
 						/>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							Address
-						</InputGroup.Text>
-						<Form.Control
+					</div>
+					<div>
+						<label htmlFor='address'>Address</label>
+						<Input
+							type='text'
+							id='address'
 							name='contact.address'
 							value={formData.contact.address || ''}
 							onChange={handleChange}
 							disabled={readOnly && true}
+							required
 						/>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>City</InputGroup.Text>
-						<Form.Control
+					</div>
+					<div>
+						<label htmlFor='city'>City</label>
+						<Input
+							type='text'
+							id='city'
 							name='contact.city'
 							value={formData.contact.city || ''}
 							onChange={handleChange}
 							disabled={readOnly && true}
+							required
 						/>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							Country
-						</InputGroup.Text>
-						<Form.Control
+					</div>
+					<div>
+						<label htmlFor='country'>Country</label>
+						<Input
+							type='text'
+							id='country'
 							name='contact.country'
 							value={formData.contact.country || ''}
 							onChange={handleChange}
 							disabled={readOnly && true}
+							required
 						/>
-					</InputGroup>
-					<InputGroup className='mb-3'>
-						<InputGroup.Text className='editInputLabel'>
-							Post code
-						</InputGroup.Text>
-						<Form.Control
+					</div>
+					<div>
+						<label htmlFor='postCode'>Post code</label>
+						<Input
+							type='text'
+							id='postCode'
 							name='contact.zip'
 							value={formData.contact.zip || ''}
 							onChange={handleChange}
 							disabled={readOnly && true}
+							required
 						/>
-					</InputGroup>
+					</div>
 				</div>
 			</div>
-			<InputGroup className='mb-3'>
-				<InputGroup.Text className='editInputLabel'>Notes</InputGroup.Text>
-				<Form.Control
-					as='textarea'
+			<div>
+				<label htmlFor='notes'>Notes</label>
+				<textarea
+					id='notes'
 					name='notes'
 					value={formData.notes || ''}
 					onChange={handleChange}
 					disabled={readOnly && true}
 				/>
-			</InputGroup>
+			</div>
 			<br />
-			<InputGroup.Text className='flex items-center justify-between'>
+			<div className='flex items-center justify-between'>
 				<div>
 					{readOnly ? (
 						<Button
-							variant='outline-primary'
-							onClick={() => setReadOnly(false)}
-						>
-							Edit Employee
-						</Button>
+							label='Edit Employee'
+							className=''
+							type='button'
+							onClick={handleIdNumberChange}
+						/>
 					) : (
-						<Button variant='outline-success' onClick={handleSubmitForm}>
-							Save Changes
-						</Button>
+						<Button label='	Save Changes' className='' type='submit' />
 					)}
 				</div>
 				<div>
-					<Button variant='outline-danger' onClick={handleShow}>
-						Delete
-					</Button>
+					<Button
+						label='Delete'
+						className=''
+						type='button'
+						onClick={handleShow}
+					/>
 				</div>
-			</InputGroup.Text>
+			</div>
 		</Form>
 	);
 }

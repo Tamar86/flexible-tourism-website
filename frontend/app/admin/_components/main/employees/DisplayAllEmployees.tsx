@@ -1,32 +1,36 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
+
 import { useEmployees } from '@/app/admin/context/EmployeesContext';
 import { formatFieldName } from '@/app/admin/helpers/formatSortbyEmployees';
-import {
-	addNewEmployee,
-	displayAllEmployees,
-} from '@/app/admin/services/employeesService';
+import { displayAllEmployees } from '@/app/admin/services/employeesService';
 import EmployeesForm from './AddNewEmployeesForm';
 import EmployeesTable from './EmployeesTable';
+import FormSearch from '@/app/admin/ui/FormSearch';
+import DropDownSort from '@/app/admin/ui/DropDownSort';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import Button from '@/app/admin/ui/Button';
 
 export default function DisplayAllEmployees() {
-	const { state, dispatch } = useEmployees();
+	const { dispatch, state } = useEmployees();
+	const { allEmployees, idNumbers } = state;
 
 	const [show, setShow] = useState(false);
 	const [title, setTitle] = useState('Sort Employees By');
 	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
 
 	useEffect(() => {
 		displayAllEmployees(dispatch);
 	}, [dispatch]);
 
-	const handleAddEmployee = async () => {
-		addNewEmployee(state, setShow, dispatch);
+	const handleAddNewEmployee = () => {
+		setShow(true);
+		const ids = allEmployees.map(employee => employee.idNumber);
+		dispatch({ type: 'SET_ID_NUMBERS', payload: ids });
+		// setIdNumbers(ids);
 	};
-
+	console.log('ids', idNumbers);
 	const handleSort = (field: string | null) => {
 		if (!field) return;
 		console.log('Sorting by:', field);
@@ -47,39 +51,40 @@ export default function DisplayAllEmployees() {
 	};
 
 	return (
-		<div className=''>
-			<div className='mb-3 flex items-center justify-between'>
-				<DropdownButton onSelect={handleSort} title={title} variant='link'>
-					<Dropdown.Item onClick={handleUnsortEmployees}>Unsort</Dropdown.Item>
-					<Dropdown.Item eventKey='firstName'>First Name (A-Z)</Dropdown.Item>
-					<Dropdown.Item eventKey='employmentType'>
-						Employment Type (A-Z)
-					</Dropdown.Item>
-					<Dropdown.Item eventKey='position'>Position (A-Z)</Dropdown.Item>
-				</DropdownButton>
+		<div className='grid gap-4'>
+			<div className='flex items-center justify-between  pt-3 pb-3 '>
+				<DropDownSort
+					onClick={handleUnsortEmployees}
+					icons={{
+						iconDown: <ChevronDown className='w-4' />,
+						iconUp: <ChevronUp className='w-4' />,
+					}}
+					label={title}
+					options={[
+						{ label: 'First Name', value: 'firstName' },
+						{ label: 'Employment Type', value: 'employmentType' },
+						{ label: 'Position', value: 'position' },
+					]}
+					onSelect={handleSort}
+				/>
 
-				<Form className='d-flex'>
-					<Form.Control
-						type='search'
-						placeholder='Search by name'
-						className='me-2'
-						aria-label='Search'
-						onChange={handleChangeSearch}
-					/>
-				</Form>
-				<Button variant='outline-primary' onClick={handleShow}>
-					Add New Employee
-				</Button>
+				<FormSearch
+					type='search'
+					placeholder='Search by employee name'
+					onChange={handleChangeSearch}
+				/>
+
+				<Button
+					label='Add New Employee'
+					className=''
+					type='button'
+					onClick={handleAddNewEmployee}
+				/>
 			</div>
 
 			<EmployeesTable />
 
-			<EmployeesForm
-				show={show}
-				setShow={setShow}
-				handleClose={handleClose}
-				addNewEmployee={handleAddEmployee}
-			/>
+			<EmployeesForm show={show} setShow={setShow} handleClose={handleClose} />
 		</div>
 	);
 }

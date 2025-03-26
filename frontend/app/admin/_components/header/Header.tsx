@@ -1,17 +1,13 @@
 'use client';
 
-import {
-	Container,
-	Nav,
-	Navbar,
-	NavDropdown,
-	Offcanvas,
-} from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
 import { useLogout } from './logout';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+
+import DropDownOptions from '../../ui/DropDownOptions';
 
 function Header() {
 	const { state, dispatch } = useAuth();
@@ -24,79 +20,70 @@ function Header() {
 	}, [dispatch, pathname]);
 
 	return (
-		<>
-			{['lg'].map(expand => (
-				<Navbar key={expand} expand={expand} className='bg-body-tertiary mb-3'>
-					<Container fluid>
-						<Navbar.Brand href='/admin/dashboard' className='ps-5'>
-							Navbar Offcanvas
-						</Navbar.Brand>
-						{/* OFFCANVAS */}
-						{loggedIn ? (
-							<>
-								<Navbar.Toggle
-									aria-controls={`offcanvasNavbar-expand-${expand}`}
-								/>
-								<Navbar.Offcanvas
-									id={`offcanvasNavbar-expand-${expand}`}
-									aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-									placement='end'
-								>
-									<Offcanvas.Header closeButton>
-										<Offcanvas.Title
-											id={`offcanvasNavbarLabel-expand-${expand}`}
-										>
-											Offcanvas
-										</Offcanvas.Title>
-									</Offcanvas.Header>
-									<Offcanvas.Body>
-										<Nav className='justify-content-end flex-grow-1 pe-5'>
-											<Nav.Link href='/admin/dashboard'>Home</Nav.Link>
-											<Nav.Link href='/admin/dashboard/bookings'>
-												Bookings
-											</Nav.Link>
-											<Nav.Link href='/admin/dashboard/tours'>Tours</Nav.Link>
-											<Nav.Link href='/admin/dashboard/employees'>
-												Employees
-											</Nav.Link>
-											<Nav.Link href='/admin/dashboard/partners'>
-												Partners
-											</Nav.Link>
-											<NavDropdown
-												title='Account'
-												id={`offcanvasNavbarDropdown-expand-${expand}`}
-											>
-												<NavDropdown.Item>Name S.</NavDropdown.Item>
-												<NavDropdown.Item href='#action4'>
-													Profile
-												</NavDropdown.Item>
-												<NavDropdown.Divider />
-												<NavDropdown.Item href='#action5' onClick={logout}>
-													Log out
-												</NavDropdown.Item>
-											</NavDropdown>
-										</Nav>
-									</Offcanvas.Body>
-								</Navbar.Offcanvas>
-							</>
-						) : (
-							<Navbar.Text>
-								{loggedIn === false && (
-									<Navbar.Text>
-										{pathname === '/admin/register' && (
-											<Link href='/admin'>Log in</Link>
-										)}
-										{pathname === '/admin' && (
-											<Link href='/admin/register'>Sign up</Link>
-										)}
-									</Navbar.Text>
-								)}
-							</Navbar.Text>
+		<header className='grid grid-cols-2 justify-between px-14 py-3 bg-slate-50 border-[1px] shadow-xl'>
+			<div className='flex items-center'>
+				<Link href='/admin/dashboard'>LOGO</Link>
+			</div>
+
+			{loggedIn ? (
+				<nav>
+					<ul className='nav-list flex items-center justify-end h-full gap-6 text-slate-700  '>
+						<li>
+							<Link href='/admin/dashboard'>Home</Link>
+						</li>
+						<li>
+							<Link href='/admin/dashboard/bookings'>Bookings</Link>
+						</li>
+						<li>
+							<Link href='/admin/dashboard/tours'>Tours</Link>
+						</li>
+						<li>
+							<Link href='/admin/dashboard/employees'>Employees</Link>
+						</li>
+						<li>
+							<DropDownOptions
+								label='Clients'
+								icons={{
+									iconDown: <ChevronDown className='w-4 cursor-pointer' />,
+									iconUp: <ChevronUp className='w-4 cursor-pointer' />,
+								}}
+								options={[
+									{ label: 'Partner', value: '/admin/dashboard/partners' },
+									{ label: 'Customer', value: '/admin/dashboard/customers' },
+								]}
+							/>
+						</li>
+						<li>
+							<DropDownOptions
+								label='Account'
+								icons={{
+									iconDown: <ChevronDown className='w-4 cursor-pointer' />,
+									iconUp: <ChevronUp className='w-4 cursor-pointer' />,
+								}}
+								options={[
+									{ label: 'Name S', value: '#' },
+									{ label: 'Profile', value: '#' },
+									{ label: 'Log out', onClick: logout },
+								]}
+							/>
+						</li>
+					</ul>
+				</nav>
+			) : (
+				<div>
+					<div>
+						{pathname === '/admin/register' && (
+							<Link href='/admin'>Log in</Link>
 						)}
-					</Container>
-				</Navbar>
-			))}
-		</>
+					</div>
+					<div>
+						{pathname === '/admin' && (
+							<Link href='/admin/register'>Sign up</Link>
+						)}
+					</div>
+				</div>
+			)}
+		</header>
 	);
 }
 

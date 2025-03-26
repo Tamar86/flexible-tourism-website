@@ -1,11 +1,7 @@
-import { Spinner } from 'react-bootstrap';
-
 export default function LoadingSpinner() {
 	return (
-		<div className='w-full flex items-center justify-center min-h-screen'>
-			<Spinner animation='border' role='status'>
-				<span className='visually-hidden'>Loading...</span>
-			</Spinner>
+		<div className='flex justify-center items-center space-x-2 min-h-screen'>
+			<div className='w-8 h-8 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin'></div>
 		</div>
 	);
 }

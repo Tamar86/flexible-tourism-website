@@ -26,10 +26,9 @@ export interface Partner {
 	partnershipStartDate: Date | null;
 	partnershipEndDate: Date | null;
 	rating: number;
-	contractDocuments: (File | string)[];
-	contractDocumentsUrls: string[];
+	documents: (File | string)[];
 	legalRepresentative: string;
-	// deletedDocuments: string[];
+
 	notes?: string;
 }
 
@@ -66,7 +65,6 @@ export type PartnersAction =
 	| { type: 'SET_INDUSTRY'; payload: string }
 	| { type: 'DELETE_CONTRACT_DOCUMENT'; payload: string }
 	| { type: 'SET_CONTRACT_DOCUMENT'; payload: (File | string)[] }
-	| { type: 'SET_CONTRACT_DOCUMENT_URLS'; payload: string[] }
 	| { type: 'SET_COMPANY_REPRESENTATIVE'; payload: string }
 	| { type: 'SET_WEBSITE'; payload: string }
 	| { type: 'SET_SOCIAL_MEDIA'; payload: string }
@@ -108,8 +106,7 @@ export type PartnerFormData = {
 	partnershipStartDate: Date | null;
 	partnershipEndDate: Date | null;
 	rating: number;
-	contractDocuments: (File | string)[];
-	contractDocumentsUrls: string[];
+	documents: (File | string)[];
 	legalRepresentative: string;
 	notes?: string;
 	// deletedDocuments: string[];
@@ -117,13 +114,6 @@ export type PartnerFormData = {
 };
 
 import { SetBooleanState } from './employees';
-
-export interface DeletePartner {
-	id: string;
-	show: boolean;
-	handleDelete: () => void;
-	handleClose: () => void;
-}
 
 export interface EditPartnerFormType {
 	partnerFormData: PartnerFormData;

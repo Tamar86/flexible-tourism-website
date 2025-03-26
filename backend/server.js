@@ -12,6 +12,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Parses form-data and x-www-form-urlencoded
 
 //routes
 const authRoutes = require('./routes/admin/adminAuthRoutes');
@@ -19,6 +20,7 @@ const adminEmployeeRoutes = require('./routes/admin/adminEmployeeRoutes');
 const adminPartnerRoutes = require('./routes/admin/adminPartnerRoutes');
 const adminBookingRoutes = require('./routes/admin/adminBookingRoutes');
 const adminTourRoutes = require('./routes/admin/adminTourRoutes');
+const adminCustomerRoues = require('./routes/admin/adminCustomerRoutes');
 
 app.use('/api/admin', authRoutes);
 app.use('/uploads', express.static('uploads'));
@@ -26,6 +28,7 @@ app.use('/api/admin/employees', adminEmployeeRoutes);
 app.use('/api/admin/partners', adminPartnerRoutes);
 app.use('/api/admin/bookings', adminBookingRoutes);
 app.use('/api/admin/tours', adminTourRoutes);
+app.use('/api/admin/customers', adminCustomerRoues);
 
 // Connect to MongoDB
 mongoose

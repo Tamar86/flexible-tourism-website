@@ -1,5 +1,5 @@
-import DisplayDocuments from '@/app/admin/_components/main/partners/DisplayDocuments';
+import DisplayPartnerDocuments from '@/app/admin/_components/main/partners/DisplayPartnerDocuments';
 
 export default function Page() {
-	return <DisplayDocuments />;
+	return <DisplayPartnerDocuments />;
 }

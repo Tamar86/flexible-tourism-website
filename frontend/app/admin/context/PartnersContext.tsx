@@ -20,9 +20,8 @@ const emptyPartner = {
 	partnershipStartDate: null,
 	partnershipEndDate: null,
 	rating: 0,
-	contractDocuments: [],
-	contractDocumentsUrls: [],
-	// deletedDocuments: [],
+	documents: [],
+
 	legalRepresentative: '',
 	notes: '',
 	contact: {
@@ -109,7 +108,7 @@ const partnersReducer = (state: PartnersState, action: PartnersAction) => {
 				...state,
 				partnerFormData: {
 					...state.partnerFormData,
-					contractDocuments: action.payload,
+					documents: action.payload,
 				},
 			};
 
@@ -119,9 +118,7 @@ const partnersReducer = (state: PartnersState, action: PartnersAction) => {
 				...state,
 				partner: {
 					...state.partner,
-					contractDocuments: state.partner?.contractDocuments.filter(
-						item => item !== document,
-					),
+					documents: state.partner?.documents.filter(item => item !== document),
 				},
 			};
 		}

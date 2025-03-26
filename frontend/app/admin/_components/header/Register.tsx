@@ -4,10 +4,9 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/app/admin/context/AuthContext';
 import { useRouter } from 'next/navigation';
-
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
-import Alert from 'react-bootstrap/Alert';
+import Form from '../../ui/Form';
+import Input from '../../ui/Input';
+import Button from '../../ui/Button';
 
 export default function Register() {
 	const { state, dispatch } = useAuth();
@@ -58,58 +57,58 @@ export default function Register() {
 		dispatch({ type: 'RESET_FORM' });
 	};
 	return (
-		<Form onSubmit={handleSubmit} className='flex flex-col w-[25rem] gap-3'>
-			<FloatingLabel controlId='floatingInput' label='Email address'>
-				<Form.Control
-					type='email'
-					placeholder='Enter email'
-					value={email}
-					onChange={e =>
-						dispatch({ type: 'SET_EMAIL', payload: e.target.value })
-					}
-					required
-				/>
-			</FloatingLabel>
-			<FloatingLabel controlId='floatingPassword' label='Password'>
-				<Form.Control
-					type='password'
-					placeholder='Enter password'
-					value={password}
-					onChange={e =>
-						dispatch({ type: 'SET_PASSWORD', payload: e.target.value })
-					}
-					required
-				/>
-			</FloatingLabel>
-			<FloatingLabel controlId='floatingPassword' label='Confirm password'>
-				<Form.Control
-					type='password'
-					placeholder='Confirm password'
-					value={confirmPassword}
-					onChange={e =>
-						dispatch({ type: 'SET_CONFIRM_PASSWORD', payload: e.target.value })
-					}
-					required
-				/>
-			</FloatingLabel>
-			<button
+		<Form onSubmit={handleSubmit}>
+			<label htmlFor='email'>Email</label>
+			<Input
+				id='email'
+				type='email'
+				placeholder='Enter email'
+				value={email}
+				onChange={e => dispatch({ type: 'SET_EMAIL', payload: e.target.value })}
+				required
+			/>
+
+			<label htmlFor='password'>Password</label>
+			<Input
+				id='password'
+				type='password'
+				placeholder='Enter password'
+				value={password}
+				onChange={e =>
+					dispatch({ type: 'SET_PASSWORD', payload: e.target.value })
+				}
+				required
+			/>
+
+			<label htmlFor='confirmPassword'>Confirm Password</label>
+			<Input
+				id='confirmPassword'
+				type='password'
+				placeholder='Confirm password'
+				value={confirmPassword}
+				onChange={e =>
+					dispatch({ type: 'SET_CONFIRM_PASSWORD', payload: e.target.value })
+				}
+				required
+			/>
+
+			<Button
+				label='Sign Up'
 				type='submit'
 				className='py-3 rounded-md bg-purple-900 hover:bg-purple-950 text-purple-50'
-			>
-				Sign Up
-			</button>
+			/>
 
 			{error && (
-				<Alert variant='danger' dismissible>
-					<Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+				<div>
+					<p>Oh snap! You got an error!</p>
 					<p>{error}</p>
-				</Alert>
+				</div>
 			)}
 			{success && (
-				<Alert variant='success'>
-					<Alert.Heading>Success</Alert.Heading>
+				<div>
+					<p>Success</p>
 					<p>{success}</p>
-				</Alert>
+				</div>
 			)}
 		</Form>
 	);

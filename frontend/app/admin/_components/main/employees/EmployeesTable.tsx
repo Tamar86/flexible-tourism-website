@@ -1,6 +1,3 @@
-import { Table } from 'react-bootstrap';
-// import DropdownMenu from './DropdownMenu';
-
 import { useEmployees } from '@/app/admin/context/EmployeesContext';
 import LoadingSpinner from '@/app/admin/ui/LoadingSpinner';
 import DropdownMenu from '@/app/admin/ui/DropDownMenu';
@@ -21,15 +18,15 @@ export default function EmployeesTable() {
 	const { state, dispatch } = useEmployees();
 	const { allEmployees } = state;
 
-	if (allEmployees.length === 0) return <LoadingSpinner />;
-
 	const handleDelete = async function (id: string) {
 		await deleteEmployee(id);
 		dispatch({ type: 'DELETE_EMPLOYEE', payload: id });
 	};
 
+	if (allEmployees.length === 0) return <LoadingSpinner />;
+
 	return (
-		<Table striped bordered hover>
+		<table>
 			<thead>
 				<tr>
 					{employeeTableData.map(data => (
@@ -38,35 +35,37 @@ export default function EmployeesTable() {
 				</tr>
 			</thead>
 			<tbody>
-				{allEmployees.map((employee, i) => (
-					<tr key={employee._id}>
-						<td>{i + 1}</td>
-						<td>{employee.fullname.firstName}</td>
-						<td>{employee.fullname.lastName}</td>
+				{allEmployees.map((employee, i) => {
+					return (
+						<tr key={employee._id}>
+							<td>{i + 1}</td>
+							<td>{employee.fullname.firstName}</td>
+							<td>{employee.fullname.lastName}</td>
 
-						<td>{employee.employmentType}</td>
-						<td>{employee.position}</td>
-						<td>
-							<a href={`tel:${employee.contact.telephone}`}>
-								{employee.contact.telephone}
-							</a>
-						</td>
-						<td>
-							<a href={`mailto${employee.contact.email}`}>
-								{employee.contact.email}
-							</a>
-						</td>
+							<td>{employee.employmentType}</td>
+							<td>{employee.position}</td>
+							<td>
+								<a href={`tel:${employee.contact.telephone}`}>
+									{employee.contact.telephone}
+								</a>
+							</td>
+							<td>
+								<a href={`mailto${employee.contact.email}`}>
+									{employee.contact.email}
+								</a>
+							</td>
 
-						<td className='flex items-center justify-center '>
-							<DropdownMenu
-								id={employee._id}
-								pathTitle='employees'
-								handleDelete={handleDelete}
-							/>
-						</td>
-					</tr>
-				))}
+							<td className='flex items-center justify-center '>
+								<DropdownMenu
+									id={employee._id}
+									pathTitle='employees'
+									handleDelete={handleDelete}
+								/>
+							</td>
+						</tr>
+					);
+				})}
 			</tbody>
-		</Table>
+		</table>
 	);
 }

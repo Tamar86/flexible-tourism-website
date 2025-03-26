@@ -10,7 +10,6 @@ import {
 	updatePartner,
 } from '@/app/admin/services/partnersService';
 
-import DeletePartnerConfirm from './DeletePartnerConfirm';
 import LoadingSpinner from '@/app/admin/ui/LoadingSpinner';
 
 import {
@@ -18,6 +17,8 @@ import {
 	handlePartnerInputChange,
 } from '@/app/admin/helpers/handlePartnerChange';
 import EditPartnerForm from './EditPartnerForm';
+import ConfirmDelete from '@/app/admin/ui/ConfirmDelete';
+import { handleSubmitPartnerForm } from '@/app/admin/utils/appendPartnerFormData';
 
 export default function EditPartner() {
 	const { id } = useParams<{ id: string }>();
@@ -52,114 +53,40 @@ export default function EditPartner() {
 		handlePartnerInputChange(e, setFile, dispatch);
 	};
 
-	const handleSubmitPartnerForm = async (
-		e: React.FormEvent<HTMLFormElement>,
-	) => {
-		e.preventDefault();
-		const form = e.currentTarget;
-		if (!form.checkValidity()) {
-			e.stopPropagation();
-			setValidated(true);
-			return;
-		}
-
-		const formData = new FormData();
-		const {
-			companyName,
-			companyRegistrationNumber,
-			industry,
-			companyRepresentative,
-			website,
-			socialMedia,
-			partnershipStatus,
-			partnershipStartDate,
-			partnershipEndDate,
-			rating,
-			legalRepresentative,
-			notes,
-			// deletedDocuments,
-
-			contact: { address, telephone, email, city, country, zip },
-		} = partnerFormData;
-
-		formData.append('companyName', companyName);
-		formData.append('companyRegistrationNumber', companyRegistrationNumber);
-		formData.append('industry', industry);
-		formData.append('companyRepresentative', companyRepresentative ?? '');
-		formData.append('website', website);
-		formData.append('socialMedia', socialMedia);
-		formData.append('partnershipStatus', partnershipStatus);
-		formData.append('notes', notes || '');
-
-		if (partnershipStartDate) {
-			formData.append(
-				'partnershipStartDate',
-				new Date(partnershipStartDate).toISOString(),
-			);
-		}
-		if (partnershipEndDate) {
-			formData.append(
-				'partnershipEndDate',
-				new Date(partnershipEndDate).toISOString(),
-			);
-		}
-		formData.append('rating', rating.toString());
-		formData.append('legalRepresentative', legalRepresentative ?? '');
-
-		formData.append('contactAddress', address ?? '');
-		formData.append('contactTelephone', telephone ?? '');
-		formData.append('contactEmail', email ?? '');
-		formData.append('contactCity', city ?? '');
-		formData.append('contactCountry', country ?? '');
-		formData.append('contactZip', zip ?? '');
-
-		//✅ Append files
-
-		if (file && file.length > 0) {
-			file.forEach(el => {
-				formData.append('contractDocuments', el);
-			});
-		} else {
-			console.warn('FILE is not an array or is empty', file);
-		}
-
-		// if (deletedDocuments && deletedDocuments.length > 0) {
-		// formData.append('deletedDocuments', JSON.stringify(deletedDocuments));
-		// }
-
-		for (const [key, value] of formData.entries()) {
-			console.log(`${key}:`, value);
-		}
-
-		try {
-			await updatePartner(formData, id, dispatch);
-
-			setReadOnly(true);
-		} catch (error) {
-			console.error('Upload failed:', error);
-		}
+	const handleSubmitPartner = (e: React.FormEvent<HTMLFormElement>) => {
+		handleSubmitPartnerForm(
+			e,
+			setValidated,
+			partnerFormData,
+			file,
+			updatePartner,
+			id,
+			dispatch,
+			setReadOnly,
+		);
 	};
 
 	const handleDelete = async function () {
 		await deletePartner(id);
+		dispatch({ type: 'DELETE_PARTNER', payload: id });
 		router.push('/admin/dashboard/partners');
 	};
 
 	if (!partner) return <LoadingSpinner />;
 	return (
 		<div>
-			<DeletePartnerConfirm
-				id={id}
+			<ConfirmDelete
 				handleDelete={handleDelete}
 				show={showConfirmDelete}
 				handleClose={handleClose}
 			/>
+
 			<EditPartnerForm
 				partnerFormData={partnerFormData}
 				handleChange={handleChange}
 				readOnly={readOnly}
 				setReadOnly={setReadOnly}
-				handleSubmitPartnerForm={handleSubmitPartnerForm}
+				handleSubmitPartnerForm={handleSubmitPartner}
 				handleShow={handleShow}
 				id={id}
 				validated={validated}
